@@ -1,6 +1,14 @@
 from fastapi import APIRouter, Query
 from ytmusicapi import YTMusic
+from app.utils.audio_extractor import get_audio_url
 
+@router.get("/audio")
+def fetch_audio_url(video_id: str = Query(..., description="YouTube video ID")):
+    try:
+        audio_url = get_audio_url(video_id)
+        return {"audio_url": audio_url}
+    except Exception as e:
+        return {"error": f"Failed to extract audio URL: {str(e)}"}
 router = APIRouter()
 ytmusic = YTMusic()  # Uses default headers; you can customize with headers.json if needed
 
